@@ -302,11 +302,11 @@ cross validation, optimizing for RMSE:
 | Hyperparameter | Value |
 |---|---|
 | max_depth | 7 |
-| learning_rate | 0.0156 |
-| max_iter | 977 |
-| min_samples_leaf | 75 |
-| l2_regularization | 1.487 |
-| max_bins | 255 |
+| learning_rate | 0.04106 |
+| max_iter | 450 |
+| min_samples_leaf | 72 |
+| l2_regularization | 0.4827 |
+| max_bins | 128 |
 
 Best CV RMSE: 0.6300
 
@@ -316,7 +316,10 @@ Best CV RMSE: 0.6300
 |---|---|
 | Dummy (mean) | 0.6400 |
 | Baseline (Linear Regression, 4 features) | 0.6401 |
-| Final Model (HistGBR, all recipe features) | 0.6302 |
+| Final Model (HistGBR, all recipe features) | 0.6312 |
+
+<img width="599" height="400" alt="image" src="https://github.com/user-attachments/assets/3e5b2da3-1c2c-4b2d-80f1-ecbcd620c461" />
+
 
 The final model achieves a test RMSE of 0.6302, compared to 0.6401 for both the
 baseline and the dummy predictor. The improvement is modest but consistent with
