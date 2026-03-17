@@ -147,7 +147,7 @@ The mean is appropriate here because average_rating is a continuous numeric outc
 and the question is about whether one group systematically rates higher than another.
 The difference in means directly measures that gap.
 
-**Why a one-sided test:** The alternative hypothesis is directional — it predicts
+**Why a one-sided test:** The alternative hypothesis is directional as it predicts
 that longer recipes rate higher, not just that the two groups differ. A one-sided
 test is the right choice when there is a specific predicted direction rather than
 just a general claim of difference.
@@ -164,7 +164,7 @@ valid regardless of the shape of the data.
 **Conclusion:**
 The observed difference in mean rating (long minus short) was -0.0321, meaning shorter
 recipes had a slightly higher average rating. At a significance level of α = 0.05, with
-a one-sided p-value of 1.0000, there is no evidence to reject the null hypothesis. The
+a one sided p-value of 1.0000, there is no evidence to reject the null hypothesis. The
 data does not support the claim that longer recipes tend to receive higher ratings than
 shorter ones. If anything, the direction of the observed difference is opposite to what
 the alternative hypothesis predicted, though the magnitude is too small to draw any
