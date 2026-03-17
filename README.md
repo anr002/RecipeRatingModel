@@ -15,7 +15,7 @@ rating of a recipe?
 This question is relevant to anyone contributing recipes to food platforms, as it
 may reveal whether time investment in a recipe influences how it is received.
 
-**Number of rows:** 83,782
+**Number of raw rows:** 83,782
 
 **Relevant Columns:**
 
