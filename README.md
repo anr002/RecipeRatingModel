@@ -143,12 +143,19 @@ with cooking times above the median and recipes at or below the median.
 a higher average rating than shorter recipes.
 
 **Test Statistic:** Difference in mean average rating (longer minus shorter recipes).
-This is appropriate because the question is about comparing a numeric outcome across
-two groups.
+The mean is appropriate here because average_rating is a continuous numeric outcome
+and the question is about whether one group systematically rates higher than another.
+The difference in means directly measures that gap.
 
-**Significance Level:** α = 0.05
+**Why a one-sided test:** The alternative hypothesis is directional — it predicts
+that longer recipes rate higher, not just that the two groups differ. A one-sided
+test is the right choice when there is a specific predicted direction rather than
+just a general claim of difference.
 
-A one-sided permutation test is used because the alternative hypothesis is directional.
+**Why a permutation test:** No assumptions are made about the underlying distribution
+of ratings. Given that ratings are heavily skewed toward 5 stars, a parametric test
+like a t-test would be less appropriate. A permutation test is distribution-free and
+valid regardless of the shape of the data.
 
 <img width="597" height="396" alt="image" src="https://github.com/user-attachments/assets/b1b5956b-c219-4cf1-a6af-330388fc7a98" />
 
