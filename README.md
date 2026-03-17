@@ -224,27 +224,50 @@ is needed in the final model step.
 
 **Nutrition (7 features):** All seven values from the nutrition field are parsed
 individually: calories, total fat, sugar, sodium, protein, saturated fat, and
-carbohydrates. These are quantitative and used as is.
+carbohydrates. These are quantitative and used as is. Nutritional content is a
+property of the recipe itself and likely influences how users perceive and rate it.
+A high-calorie dessert and a low-calorie salad attract different audiences with
+different rating tendencies.
 
 **Ratio features (7 features):** Derived from nutrition and recipe structure.
-For example, protein_ratio = protein / (calories + 1), fat_protein_ratio,
-cal_per_minute, recipe_simplicity, and time_efficiency. These capture relationships
-between fields that a linear model on raw values would miss.
+For example, 
+
+protein_ratio = protein / (calories + 1),
+
+fat_protein_ratio,
+cal_per_minute, recipe_simplicity, and time_efficiency. Raw values alone do not
+capture how nutrients relate to each other or to the recipe's structure. A recipe
+with 500 calories means something different if it takes 10 minutes versus 2 hours.
+These ratios capture those relationships in a way a linear model on raw values
+would miss.
 
 **Text features via TF-IDF + SVD:** Recipe name, description, tags, ingredients,
 and steps are each vectorized with TF-IDF and compressed to dense SVD components
-(10-20 per field). This converts unstructured text into numeric features without
-exploding the feature space.
+(10-20 per field). The text a contributor writes reflects the recipe's identity and
+intended audience. A recipe titled "quick weeknight pasta" signals something
+different from "traditional Neapolitan ragu," and those signals may correlate with
+rating patterns. SVD keeps the feature count manageable while preserving the
+dominant semantic structure.
 
 **Target-encoded categoricals (nominal):** The top 50 tags, top 30 ingredients,
-and contributor_id are target-encoded using sklearn's TargetEncoder. These are
-nominal features with high cardinality, so one-hot encoding would be impractical.
+and contributor_id are target-encoded using sklearn's TargetEncoder. Tags and
+ingredients define what category a recipe belongs to, and certain categories
+systematically attract higher or lower ratings regardless of the specific recipe.
+contributor_id captures the fact that some contributors have a track record of
+posting recipes that rate well, which is a real signal in the data generating
+process. One-hot encoding would be impractical given the high cardinality.
 
-**Date features (2):** submit_year and submit_month capture temporal patterns
-in how recipes are rated across time.
+**Date features (2):** submit_year and submit_month capture temporal patterns in
+how recipes are rated. User behavior and rating norms on food platforms shift over
+time, and recipes submitted in certain periods may reflect different community
+standards or platform demographics.
 
 **Other numeric features:** name_length, desc_length, avg_step_length,
-avg_ingredient_rarity, n_tags, log_minutes.
+avg_ingredient_rarity, n_tags, log_minutes. The effort a contributor puts into
+writing a recipe, measured by description length and step detail, may signal
+quality or care that users respond to. Ingredient rarity captures whether a recipe
+uses niche or hard-to-find items, which could influence ratings from users who
+struggled to source them.
 
 All features are available at the time a recipe is posted. No interaction-based
 features are used.
@@ -252,11 +275,11 @@ features are used.
 ### Model and Hyperparameter Tuning
 
 HistGradientBoostingRegressor was chosen over Linear Regression because it handles
-nonlinear relationships, missing values natively, and scales well to higher dimensional
-feature sets.
+nonlinear relationships, missing values natively, and scales well to higher
+dimensional feature sets.
 
-The following hyperparameters were tuned using Optuna with 100 trials and 5-fold
-cross-validation, optimizing for RMSE:
+The following hyperparameters were tuned using Optuna with 100 trials and 5 fold
+cross validation, optimizing for RMSE:
 
 - **max_depth:** controls tree depth. Deeper trees capture more complex patterns but
   risk overfitting.
@@ -266,6 +289,19 @@ cross-validation, optimizing for RMSE:
 - **min_samples_leaf:** minimum samples at a leaf node. Higher values reduce overfitting.
 - **l2_regularization:** directly penalizes model complexity.
 - **max_bins:** number of bins for histogram construction.
+
+**Best hyperparameters found:**
+
+| Hyperparameter | Value |
+|---|---|
+| max_depth | 7 |
+| learning_rate | 0.0156 |
+| max_iter | 977 |
+| min_samples_leaf | 75 |
+| l2_regularization | 1.487 |
+| max_bins | 255 |
+
+Best CV RMSE: 0.6300
 
 ### Performance
 
@@ -281,7 +317,7 @@ what the data allows. Recipe-level features at post time carry limited informati
 about future user ratings, largely because the rating distribution is heavily skewed
 toward 5 stars.
 
-The top features by permutation importance are the target-encoded contributor_id
+The top features by permutation importance are the target encoded contributor_id
 and tag/ingredient embeddings, suggesting that who posts the recipe and what
 category it falls into matter more than its specific nutritional or structural
 properties.
