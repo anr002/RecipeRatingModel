@@ -321,7 +321,7 @@ Best CV RMSE: 0.6300
 <img width="599" height="400" alt="image" src="https://github.com/user-attachments/assets/3e5b2da3-1c2c-4b2d-80f1-ecbcd620c461" />
 
 
-The final model achieves a test RMSE of 0.6302, compared to 0.6401 for both the
+The final model achieves a test RMSE of 0.6312, compared to 0.6401 for both the
 baseline and the dummy predictor. The improvement is modest but consistent with
 what the data allows. Recipe level features at post time carry limited information
 about future user ratings, largely because the rating distribution is heavily skewed
