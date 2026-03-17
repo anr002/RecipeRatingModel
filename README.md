@@ -39,7 +39,7 @@ may reveal whether time investment in a recipe influences how it is received.
 The following cleaning steps were applied to prepare the dataset for analysis:
 
 1. **Left merge of recipes and interactions:** The recipes and interactions datasets
-   were left-merged on `recipe_id`. This preserves all recipes, including those with
+   were leftmerged on `recipe_id`. This preserves all recipes, including those with
    no user reviews, while attaching any available rating data.
 
 2. **Replacing 0 ratings with NaN:** Ratings of 0 were replaced with `np.nan`. A
@@ -114,11 +114,11 @@ to explain it and make it MAR.
 The merged dataset has three columns with missing values: `rating`, `description`, and
 `average_rating`. Since `average_rating` is derived from `rating`, its missingness is a
 direct consequence of the same process. `description` was chosen for the permutation
-tests below as it has non-trivial missingness independent of the rating process.
+tests below as it has nontrivial missingness independent of the rating process.
 
 ### Missingness Dependency
 
-Permutation tests (1000 iterations, two-sided) were run to assess whether the
+Permutation tests (1000 iterations, two sided) were run to assess whether the
 missingness of `description` depends on other observed columns.
 
 <img width="594" height="400" alt="image" src="https://github.com/user-attachments/assets/9bb03384-e92c-4cfb-a03c-9ac66668ecb3" />
@@ -147,19 +147,19 @@ The mean is appropriate here because average_rating is a continuous numeric outc
 and the question is about whether one group systematically rates higher than another.
 The difference in means directly measures that gap.
 
-**Why a one-sided test:** The alternative hypothesis is directional as it predicts
-that longer recipes rate higher, not just that the two groups differ. A one-sided
+**Why a one sided test:** The alternative hypothesis is directional as it predicts
+that longer recipes rate higher, not just that the two groups differ. A onesided
 test is the right choice when there is a specific predicted direction rather than
 just a general claim of difference.
 
 **Why a permutation test:** No assumptions are made about the underlying distribution
 of ratings. Given that ratings are heavily skewed toward 5 stars, a parametric test
-like a t-test would be less appropriate. A permutation test is distribution-free and
-valid regardless of the shape of the data.
+like a t-test would be less appropriate. A permutation test is distribution free and
+applicable regardless of the shape of the data.
 
 <img width="597" height="396" alt="image" src="https://github.com/user-attachments/assets/b1b5956b-c219-4cf1-a6af-330388fc7a98" />
 
-**P-value (one-sided):** 1.0000
+**P-value (one sided):** 1.0000
 
 **Conclusion:**
 The observed difference in mean rating (long minus short) was -0.0321, meaning shorter
@@ -184,7 +184,7 @@ is useful for recipe contributors and recommendation systems.
 penalizes larger prediction errors more heavily than MAE. A prediction off by 2 stars
 is much worse than one off by 0.5 stars, and RMSE captures that better.
 
-**Features and time-of-prediction justification:** All features are known when a
+**Features and time of prediction justification:** All features are known when a
 recipe is first posted, before any user has rated it:
 
 | Feature | Type | Description |
@@ -233,7 +233,7 @@ is needed in the final model step.
 individually: calories, total fat, sugar, sodium, protein, saturated fat, and
 carbohydrates. These are quantitative and used as is. Nutritional content is a
 property of the recipe itself and likely influences how users perceive and rate it.
-A high-calorie dessert and a low-calorie salad attract different audiences with
+A high calorie dessert and a low calorie salad attract different audiences with
 different rating tendencies.
 
 **Ratio features (7 features):** Derived from nutrition and recipe structure.
@@ -256,13 +256,13 @@ different from "traditional Neapolitan ragu," and those signals may correlate wi
 rating patterns. SVD keeps the feature count manageable while preserving the
 dominant semantic structure.
 
-**Target-encoded categoricals (nominal):** The top 50 tags, top 30 ingredients,
-and contributor_id are target-encoded using sklearn's TargetEncoder. Tags and
+**Target encoded categoricals (nominal):** The top 50 tags, top 30 ingredients,
+and contributor_id are target encoded using sklearn's TargetEncoder. Tags and
 ingredients define what category a recipe belongs to, and certain categories
 systematically attract higher or lower ratings regardless of the specific recipe.
 contributor_id captures the fact that some contributors have a track record of
 posting recipes that rate well, which is a real signal in the data generating
-process. One-hot encoding would be impractical given the high cardinality.
+process. One hot encoding would be impractical given the high cardinality.
 
 **Date features (2):** submit_year and submit_month capture temporal patterns in
 how recipes are rated. User behavior and rating norms on food platforms shift over
@@ -273,10 +273,10 @@ standards or platform demographics.
 avg_ingredient_rarity, n_tags, log_minutes. The effort a contributor puts into
 writing a recipe, measured by description length and step detail, may signal
 quality or care that users respond to. Ingredient rarity captures whether a recipe
-uses niche or hard-to-find items, which could influence ratings from users who
+uses niche or hard to find items, which could influence ratings from users who
 struggled to source them.
 
-All features are available at the time a recipe is posted. No interaction-based
+All features are available at the time a recipe is posted. No interaction based
 features are used.
 
 ### Model and Hyperparameter Tuning
@@ -320,7 +320,7 @@ Best CV RMSE: 0.6300
 
 The final model achieves a test RMSE of 0.6302, compared to 0.6401 for both the
 baseline and the dummy predictor. The improvement is modest but consistent with
-what the data allows. Recipe-level features at post time carry limited information
+what the data allows. Recipe level features at post time carry limited information
 about future user ratings, largely because the rating distribution is heavily skewed
 toward 5 stars.
 
@@ -355,15 +355,15 @@ than its RMSE for quick recipes.
 - RMSE (slow recipes): 0.6580
 - RMSE (quick recipes): 0.6032
 - Observed difference: 0.0548
-- P-value (one-sided): 0.0000
+- P-value (one sided): 0.0000
 
 **Conclusion:**
 The observed RMSE for slow recipes (0.6580) was higher than for quick recipes (0.6032),
-a difference of 0.0548. At a significance level of α = 0.05, with a one-sided p-value
+a difference of 0.0548. At a significance level of α = 0.05, with a one sided p-value
 of 0.0000, there is sufficient evidence to reject the null hypothesis. The data suggests
 the model performs worse on slow recipes than on quick ones.
 
 This is consistent with the overall findings of the project. Slow recipes likely include
-more varied and niche categories such as brines, fermented foods, and slow-cooked meats,
+more varied and niche categories such as brines, fermented foods, and slow cooked meats,
 which may have less predictable rating patterns than the more common quick recipes that
 dominate the dataset. The model appears to struggle more in that space.
